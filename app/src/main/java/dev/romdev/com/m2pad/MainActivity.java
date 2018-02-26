@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
 
 //        EventBus.getDefault().register(this);//注册eventbus
         checkMyPermission();//检查更新权限
-
+        //测试
 
         initView();
 
