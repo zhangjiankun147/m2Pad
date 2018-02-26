@@ -1,0 +1,55 @@
+apply plugin: 'com.android.application'
+// 注：需要配置符号表时，使用bugly插件
+apply plugin: 'bugly'
+bugly {
+    appId = 'da48344edf'
+    appKey = '8f39054c-9612-4674-afb4-a01afca753e9'
+}
+android {
+    compileSdkVersion 25
+    buildToolsVersion '26.0.2'
+    defaultConfig {
+        applicationId "dev.romdev.com.m2pad"
+        minSdkVersion 19
+        targetSdkVersion 22
+        versionCode 3
+        versionName "1.0.3"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+
+    buildTypes {
+        release {
+            // 开启混淆
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    testCompile 'junit:junit:4.12'
+
+    //retrofit
+    // Retrofit
+    compile 'com.squareup.retrofit2:retrofit:2.0.2'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.2'
+    compile 'com.lzy.net:okgo:3.0.4'
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
+    compile 'com.zhy:okhttputils:2.6.2'
+    compile 'de.greenrobot:eventbus:3.0.0-beta1'
+    compile 'com.github.open-android:Loading:1.0'
+    compile 'com.tencent.bugly:crashreport:latest.release'
+    //其中latest.release指代最新版本号,也可以指定明确的版本号,例如2.1.5
+//    compile 'com.tencent.bugly:nativecrashreport:latest.release'
+//其中latest.release指代最新版本号,也可以指定明确的版本号,例如2.2.0
+    compile 'com.coolerfall:android-app-daemon:1.2.0'
+    compile 'com.jakewharton:butterknife:8.5.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+}

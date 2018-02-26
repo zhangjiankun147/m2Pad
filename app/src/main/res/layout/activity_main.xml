@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_control"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/imageView" />
+
+
+    <LinearLayout
+        android:visibility="invisible"
+        android:layout_marginLeft="150dp"
+        android:layout_marginTop="30dp"
+        android:id="@+id/userNamePart"
+        android:layout_below="@id/imageView"
+        android:orientation="horizontal"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_marginRight="20dp"
+            android:textSize="18sp"
+            android:text="请输入用户名"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:text="control_app"
+            android:id="@+id/userName"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="150dp"
+        android:id="@+id/passCom"
+        android:layout_below="@id/userNamePart"
+        android:orientation="vertical"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/renxiang" />
+        <LinearLayout
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <!--<TextView-->
+                <!--android:layout_marginRight="20dp"-->
+                <!--android:textSize="18sp"-->
+                <!--android:id="@+id/textView"-->
+                <!--android:text="   请输入密码"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content" />-->
+
+            <EditText
+                android:id="@+id/passWord"
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:hint="请输入密码"
+                android:inputType="textPassword" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/okButton"
+        android:layout_width="100dp"
+        android:layout_height="35dp"
+        android:layout_alignStart="@+id/passCom"
+        android:layout_below="@+id/passCom"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/login_selector"
+        android:onClick="onClickOK"
+        android:text="OK"
+        android:textColor="@drawable/textcolor_selector"
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:layout_marginTop="60dp"
+        android:layout_below="@id/imageView"
+        android:orientation="vertical"
+        android:id="@+id/controlPanel"
+        android:layout_marginLeft="100dp"
+        android:layout_toRightOf="@id/userNamePart"
+        android:layout_width="300dp"
+        android:layout_height="match_parent">
+
+        <Switch
+            android:clickable="false"
+            android:textSize="15sp"
+            android:checked="true"
+            android:id="@+id/usb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="USB数据传输" />
+
+        <Switch
+            android:clickable="false"
+            android:textSize="15sp"
+            android:checked="true"
+            android:layout_marginTop="15dp"
+            android:id="@+id/installAPP"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="APP安装" />
+
+        <Switch
+            android:clickable="false"
+            android:textSize="15sp"
+            android:checked="true"
+            android:layout_marginTop="15dp"
+            android:id="@+id/systemReset"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="允许恢复出厂设置" />
+        <Switch
+            android:clickable="false"
+            android:textSize="15sp"
+            android:checked="true"
+            android:layout_marginTop="15dp"
+            android:id="@+id/browserUse"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="浏览器使用" />
+        <Switch
+            android:id="@+id/sdka"
+            android:clickable="false"
+            android:textSize="15sp"
+            android:checked="true"
+            android:layout_marginTop="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SD卡使用" />
+        <Switch
+            android:id="@+id/blue"
+            android:clickable="false"
+            android:textSize="15sp"
+            android:checked="true"
+            android:layout_marginTop="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="蓝牙使用" />
+
+        <TextView
+            android:text="以上功能会在5分钟内自动关闭"
+            android:layout_marginTop="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+        <Button
+            android:textSize="18sp"
+            android:onClick="onClickClose"
+            android:id="@+id/disableBtn"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center_horizontal"
+            android:text="马上关闭"
+            android:background="@android:color/transparent"
+            android:layout_width="100dp"
+            android:layout_height="35dp" />
+    </LinearLayout>
+    <TextView
+        android:id="@+id/version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1.0.1"
+        android:textSize="18sp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="18dp"
+        android:layout_marginBottom="18dp"
+        />
+
+    <!--<Button-->
+        <!--android:id="@+id/clean"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_marginEnd="55dp"-->
+        <!--android:layout_toStartOf="@+id/version"-->
+        <!--android:background="@drawable/login_selector"-->
+        <!--android:text="清除ip"-->
+        <!--android:layout_marginBottom="18dp"-->
+        <!--android:textColor="@drawable/textcolor_selector" />-->
+
+    <!--<Button-->
+        <!--android:id="@+id/up"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_marginEnd="55dp"-->
+        <!--android:layout_toStartOf="@+id/clean"-->
+        <!--android:background="@drawable/login_selector"-->
+        <!--android:layout_marginBottom="18dp"-->
+        <!--android:text="获取ip"-->
+        <!--android:textColor="@drawable/textcolor_selector" />-->
+
+</RelativeLayout>

@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">系统管控</string>
+    <string name="accessibility_service_description">智能安装服务，无需用户的任何操作就可以安装程序</string>
+</resources>
