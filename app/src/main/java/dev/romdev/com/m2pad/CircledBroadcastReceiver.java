@@ -89,10 +89,12 @@ public class CircledBroadcastReceiver extends BroadcastReceiver {
                     noPasswordInstall(context1);//免密安装包
                     checkBrowserAPITime(context1); //获取APP上网时间
 
-                    if(isControlTime){
-                        checkBrowserAPIWebIP(context1);//指定 ip 上网
-                        checkAccessNetApp(context1);//指定app上网
-                    }
+//                    if(isControlTime){
+//                        checkBrowserAPIWebIP(context1);//指定 ip 上网
+//                        checkAccessNetApp(context1);//指定app上网
+//                    }
+                    checkBrowserAPIWebIP(context1);//指定 ip 上网
+                    checkAccessNetApp(context1);//指定app上网
                     checkUSBInstall(context1);//获取USB状态
                     checkHomeButton(context1);//获取HOME键状态
                     updatePassword(context1);//获取后台设置的密码

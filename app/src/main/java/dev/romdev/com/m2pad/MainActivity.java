@@ -289,6 +289,29 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         passWord.setText("");
+        SharedPreferences sharedPreferences = getSharedPreferences("share", MODE_PRIVATE);
+        boolean isFirstRun = sharedPreferences.getBoolean("isFirstRun", true);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if (isFirstRun)
+        {
+            ArrayList<String> netAdressList = new ArrayList<>();
+            netAdressList.add("119.23.60.223");
+            netAdressList.add("119.23.113.71");
+            netAdressList.add("192.0.0.0/8");
+            netAdressList.add("10.0.0.0/8");
+            netAdressList.add("42.156.141.13");
+            netAdressList.add("120.77.167.192");
+            netAdressList.add("120.77.166.123");
+            dpm.removeIPWhiteList(componentName,netAdressList);
+            Log.d("debug", "第一次运行");
+            editor.putBoolean("isFirstRun", false);
+            editor.commit();
+
+        } else
+        {
+            Log.d("debug", "不是第一次运行");
+
+        }
         doServerUpdate();
         Intent intent = new Intent(this, MyService.class);
         startService(intent);
@@ -492,6 +515,18 @@ public class MainActivity extends AppCompatActivity {
         appInstallWhiteList.add("com.romdev.app1");
 
         appInstallWhiteList.add("com.yqh.education");//高分云app包名
+
+        appInstallWhiteList.add("com.yangcong345.android.phone");
+
+        appInstallWhiteList.add("com.A17zuoye.mobile.homework");
+
+        appInstallWhiteList.add("com.knowbox.wb.student");
+
+        appInstallWhiteList.add(BROWER_PACKAGE_NAME);
+
+        appInstallWhiteList.add(HW_BROWSER_PACKAGE);
+
+
 
 //        dpm.setAppWhite(componentName, true, appInstallWhiteList);
 
