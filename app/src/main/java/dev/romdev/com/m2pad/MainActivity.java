@@ -17,6 +17,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -38,10 +39,10 @@ import dev.romdev.com.m2pad.net.InstallApkQuietly;
 import dev.romdev.com.m2pad.utils.LogUtils;
 import dmax.dialog.SpotsDialog;
 
-public class MainActivity extends AppCompatActivity {
+public  class  MainActivity extends AppCompatActivity {
 
     private EditText passWord;
-    private Context context;
+    public static Context context;
     public static HwDevicePolicyManager dpm;
     public static ComponentName componentName;
     private EditText userName;
@@ -57,11 +58,13 @@ public class MainActivity extends AppCompatActivity {
 
     public final static String ACTION_FIRST_TIME = "com.romdev.ACTION_FIRST_TIME";
 
+    public final static String ACTION_REPLACED = "android.intent.action.PACKAGE_REPLACED";
+
     public final String BROWER_PACKAGE_NAME = "com.android.chrome";
 
     public final static String HW_BROWSER_PACKAGE = "com.android.browser";
 
-
+    private  ArrayList<String> uninstallApp = new ArrayList<>();
     public ArrayList<String> timeSlot = new ArrayList();
 
     public static ArrayList<String> appInstallWhiteList = new ArrayList();
@@ -86,6 +89,8 @@ public class MainActivity extends AppCompatActivity {
     public static Switch sdka;
     public static Switch blue;
     private ArrayList<String> ar;
+    private Button mClean;
+    private Button mUp;
     //    private CheckUpdata mCheckUpdata;
 
     private void timeControl() {
@@ -156,6 +161,8 @@ public class MainActivity extends AppCompatActivity {
         dpm = new HwDevicePolicyManager(this);
         componentName = new ComponentName(this, MainActivity.class);
 
+
+
         initData();
 
 
@@ -163,19 +170,23 @@ public class MainActivity extends AppCompatActivity {
 
     private void initData() {
 
-         ar = new ArrayList<>();
+        ar = new ArrayList<>();
         ArrayList<String> forbidkill = new ArrayList<>();
-        ArrayList<String> accessibility = new ArrayList<>();
         forbidkill.add(packageName);
 
         try {
             ar.add(packageName);
             ar.add("com.yqh.education");//高分云app
-            ar.add("com.android.application");
-            ar.add(BROWER_PACKAGE_NAME);
-            accessibility.add(packageName);
 
-            dpm.setDisallowedUninstallPackages(componentName, ar);//不能卸载管控app
+            uninstallApp.add(packageName);
+            uninstallApp.add("com.yqh.education");//高分云app
+            uninstallApp.add(BROWER_PACKAGE_NAME);
+            uninstallApp.add("com.knowbox.word.student");
+            uninstallApp.add("com.knowbox.wb.student");
+            uninstallApp.add("com.A17zuoye.mobile.homework");
+            uninstallApp.add("com.yangcong345.android.phone");
+
+            dpm.setDisallowedUninstallPackages(componentName, uninstallApp);//不能卸载管控app
 
             dpm.setFactoryResetDisabled(componentName, true);//不能恢复出厂设置
 
@@ -197,12 +208,13 @@ public class MainActivity extends AppCompatActivity {
 
             dpm.setExternalStorageDisabled(componentName, true);     //禁止 SD 卡
 
-            dpm.setAccessibilityWhiteList(componentName, accessibility);//设置默认开启辅助功能应用
+            dpm.setAccessibilityWhiteList(componentName, ar);//设置默认开启辅助功能应用
 
-            dpm.setIPWhiteList(componentName, null);//浏览器上网
-            dpm.cleanNetworkAccessAppWhiteList(componentName);
+//            dpm.setIPWhiteList(componentName, null);//浏览器上网
+//            dpm.cleanNetworkAccessAppWhiteList(componentName);
 
-            setAppWhiteList();//设置app的白名单
+//            setAppWhiteList();//设置app的白名单
+
 
             JSONObject object = new JSONObject();
             object.put("interUser", ConfigParam.API_USER_NAME);
@@ -229,18 +241,22 @@ public class MainActivity extends AppCompatActivity {
         mTvVersion.setText("V " + version);
 
 
-//        mClean.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                dpm.setIPWhiteList(componentName, null);
-//            }
-//        });
-//        mUp.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                doServerUpdate();
-//            }
-//        });
+        mClean.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<String> ipWhiteList = dpm.getIPWhiteList(componentName);
+                String s = String.valueOf(ipWhiteList);
+                LogUtils.file("IP白名单按钮点击"+s);
+            }
+        });
+        mUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<String> networkAccessAppWhiteList = dpm.getNetworkAccessAppWhiteList(componentName);
+                String appWhiteList = String.valueOf(networkAccessAppWhiteList);
+                LogUtils.file("指定app上网按钮点击"+appWhiteList);
+            }
+        });
 
     }
 
@@ -271,8 +287,8 @@ public class MainActivity extends AppCompatActivity {
         browserUse = (Switch)findViewById(R.id.browserUse);
         sdka = (Switch)findViewById(R.id.sdka);
         blue = (Switch)findViewById(R.id.blue);
-//        mClean = (Button) findViewById(R.id.clean);
-//        mUp = (Button) findViewById(R.id.up);
+        mClean = (Button) findViewById(R.id.clean);
+        mUp = (Button) findViewById(R.id.up);
         controlPart.setVisibility(View.INVISIBLE);
 
         context = this;
@@ -288,6 +304,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+
         passWord.setText("");
         SharedPreferences sharedPreferences = getSharedPreferences("share", MODE_PRIVATE);
         boolean isFirstRun = sharedPreferences.getBoolean("isFirstRun", true);
@@ -315,8 +332,6 @@ public class MainActivity extends AppCompatActivity {
         doServerUpdate();
         Intent intent = new Intent(this, MyService.class);
         startService(intent);
-        String version = checkVersion();
-        mTvVersion.setText("V " + version);
 
         Intent callByEdu = getIntent();//被高分云程序调起
 //        if (callByEdu.getFlags() == 101) {
@@ -336,16 +351,38 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
+
 //----------------------------------
         //获取ip上网白名单
         List<String> ipWhiteList = dpm.getIPWhiteList(componentName);
         String s = String.valueOf(ipWhiteList);
-        LogUtils.file("白名单：", s + "\r\n");
+        LogUtils.file("白名单平板接口：", s + "\r\n");
 
         //获取App上网白名单
         List<String> networkAccessAppWhiteList = dpm.getNetworkAccessAppWhiteList(componentName);
         String appWhiteList = String.valueOf(networkAccessAppWhiteList);
-        LogUtils.file("App上网白名单：", appWhiteList + "\r\n");
+        LogUtils.file("App上网白名单平板接口：", appWhiteList + "\r\n");
+
+        boolean usb = dpm.isUSBDataDisabled(componentName);
+        LogUtils.file("usb平板接口：", usb + "\r\n");
+
+        List<String> instal = dpm.getInstallPackageWhiteList(componentName);
+        LogUtils.file("获取应用安装白名单平板接口：", instal + "\r\n");
+
+        List<String> kill = dpm.getForbidKillAppWhitelist(componentName);
+        LogUtils.file("获取应用禁止被杀死白名单平板接口：", kill + "\r\n");
+
+        boolean blues = dpm.isBluetoothDisabled(componentName);
+        LogUtils.file("查询蓝牙是否被禁止平板接口"+blues);
+
+        boolean exter = dpm.isExternalStorageDisabled(componentName);
+        LogUtils.file("查询SD卡访问是否被禁用平板接口"+exter);
+
+        boolean wifi = dpm.isWifiDisabled(componentName);
+        LogUtils.file("查询wifi是否被禁用平板接口"+wifi);
+
+        boolean safe = dpm.isSafeModeDisabled(componentName);
+        LogUtils.file("查询安全模式是否被禁用平板"+safe);
 
         //--------------------------
 
@@ -476,12 +513,16 @@ public class MainActivity extends AppCompatActivity {
         //set app installation enabled
 //      dpm.setAppInstallDisabled(componentName, true);
 
-        ar.add(packageName);
-        ar.add("com.yqh.education");//高分云app
-        ar.add("com.android.application");
-        ar.add(BROWER_PACKAGE_NAME);
+        uninstallApp.add(packageName);
+        uninstallApp.add("com.yqh.education");//高分云app
+        uninstallApp.add("com.android.application");
+        uninstallApp.add(BROWER_PACKAGE_NAME);
+        uninstallApp.add("com.knowbox.word.student");
+        uninstallApp.add("com.knowbox.wb.student");
+        uninstallApp.add("com.A17zuoye.mobile.homework");
+        uninstallApp.add("com.yangcong345.android.phone");
 
-        dpm.setDisallowedUninstallPackages(componentName, ar);//不能卸载管控app
+        dpm.setDisallowedUninstallPackages(componentName, uninstallApp);//不能卸载管控app
 
         dpm.setFactoryResetDisabled(componentName, true);
 
@@ -503,35 +544,35 @@ public class MainActivity extends AppCompatActivity {
         controlPart.setVisibility(View.GONE);
         alarmManager.cancel(pi);
     }
-
-    private void setAppWhiteList() {
-
-        //setInstallPackageBlackList
-
-        appInstallWhiteList.add(packageName);
-
-        appInstallWhiteList.add("dev.romdev.com.zhangan");
-
-        appInstallWhiteList.add("com.romdev.app1");
-
-        appInstallWhiteList.add("com.yqh.education");//高分云app包名
-
-        appInstallWhiteList.add("com.yangcong345.android.phone");
-
-        appInstallWhiteList.add("com.A17zuoye.mobile.homework");
-
-        appInstallWhiteList.add("com.knowbox.wb.student");
-
-        appInstallWhiteList.add(BROWER_PACKAGE_NAME);
-
-        appInstallWhiteList.add(HW_BROWSER_PACKAGE);
-
-
-
-//        dpm.setAppWhite(componentName, true, appInstallWhiteList);
-
-        dpm.addInstallPackages(componentName, appInstallWhiteList);
-    }
+//
+//    private void setAppWhiteList() {
+//
+//        //setInstallPackageBlackList
+//
+//        appInstallWhiteList.add(packageName);
+//
+//        appInstallWhiteList.add("dev.romdev.com.zhangan");
+//
+//        appInstallWhiteList.add("com.romdev.app1");
+//
+//        appInstallWhiteList.add("com.yqh.education");//高分云app包名
+//
+//        appInstallWhiteList.add("com.yangcong345.android.phone");
+//
+//        appInstallWhiteList.add("com.A17zuoye.mobile.homework");
+//
+//        appInstallWhiteList.add("com.knowbox.wb.student");
+//
+//        appInstallWhiteList.add(BROWER_PACKAGE_NAME);
+//
+//        appInstallWhiteList.add(HW_BROWSER_PACKAGE);
+//
+//
+//
+////        dpm.setAppWhite(componentName, true, appInstallWhiteList);
+//
+//        dpm.addInstallPackages(componentName, appInstallWhiteList);
+//    }
 
     /**
      * 检查版本更新前，先检查存储权限。否则无法下载apk
@@ -567,6 +608,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     //--------------------------检擦app更新end--------------------------------------------------
     //EventBus注册和销毁
     @Override
@@ -591,67 +633,6 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
-//    @Subscribe(threadMode = ThreadMode.MainThread,sticky = true)
-//    public void onEvent(EventBusMsg msg) {//接收从CircledBroadcastReceiver发过来的消息
-//        //检查版本号
-//        PackageManager pm = context.getPackageManager();
-//        PackageInfo pi = null;
-//        String oldVersion = null;
-//        try {
-//            pi = pm.getPackageInfo(context.getPackageName(), 0);
-//            oldVersion = pi.versionName.replace(".", "");
-//        } catch (PackageManager.NameNotFoundException e) {
-//            e.printStackTrace();
-//        }
-////        String oldVersion = checkVersion();
-//        if (StringUtil.isEmpty(oldVersion) || !StringUtil.strIsNum(oldVersion)) {
-//            return;
-//        }
-//
-//        final String finalOldVersion = oldVersion.replace(".", "");
-//
-//
-//        if (msg.what == ConfigParam.DOWNLOADAPK) {
-//            UpdateAPPResponse updata = (UpdateAPPResponse) msg.object;
-//
-//            if (StringUtil.isNotEmpty(updata.data.get(0).versionRecord.versionCode)) {//版本号
-//                String forcedUpgrade = updata.data.get(0).versionRecord.downloadUrl;
-//                String currentVersion = updata.data.get(0).versionRecord.versionCode.replace(".", "");
-//                if (StringUtil.isNotEmpty(currentVersion) && StringUtil.strIsNum(currentVersion)) {
-//                    //需要升级
-//                    if (Integer.parseInt(currentVersion) > Integer.parseInt(finalOldVersion)) {
-//                        //不强制升级
-//                        if (StringUtil.isNotEmpty(updata.data.get(0).versionRecord.forcedUpgrade)
-//                                && "I02".equals(updata.data.get(0).versionRecord.forcedUpgrade)) {
-//
-//                        }
-//                        //强制升级
-//                        if (StringUtil.isNotEmpty(updata.data.get(0).versionRecord.forcedUpgrade)
-//                                && "I01".equals(updata.data.get(0).versionRecord.forcedUpgrade)) {
-//
-////                                        downloadApk(updata.data.get(0).versionRecord.downloadUrl);
-//
-////                                        UpdateAPPDialog updateAPPDialog = new UpdateAPPDialog();
-////                                        updateAPPDialog.setIsForce(true);
-////
-////                                        updateAPPDialog.setDownloadUrl(updata.data.get(0).versionRecord.downloadUrl);
-////                                        updateAPPDialog.setUploadTitle(updata.data.get(0).versionRecord.uploadTitle);
-////                                        updateAPPDialog.setUploadDetail(updata.data.get(0).versionRecord.uploadDetail);
-////                                        updateAPPDialog.setCurrentVersion(updata.data.get(0).versionRecord.versionCode);
-////                                        updateAPPDialog.initUpdateAPPDialog(context).show();
-//
-////--------------------------------------------------------------------------------------------
-//                            InstallApkQuietly.packageAppName = "dev.romdev.com.m2pad";
-//                            InstallApkQuietly.url = updata.data.get(0).versionRecord.downloadUrl;
-//                            InstallApkQuietly.mContext = this;
-//                            InstallApkQuietly.init();
-//
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//
-//    }
+
 
 }

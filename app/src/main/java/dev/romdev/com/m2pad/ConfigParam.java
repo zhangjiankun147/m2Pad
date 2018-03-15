@@ -13,7 +13,7 @@ public class ConfigParam {
 //    public final static String BASE_API = "http://119.23.60.223:2001/service-soa/sysControlPolicy/";  //测试
 
     public final static String BASE_API_Updata = "http://119.23.113.71:8080/service-soa/sysModuleVersion/";     //升级管控app
-    //升级测试
+//    升级测试
 //    public final static String BASE_API_Updata = "http://119.23.113.71:9001/service-soa/sysModuleVersion/";     //升级管控app
 
     public final static String WEB_UPDATA_APP = "getLatestModuleVerion";    //升级管控app

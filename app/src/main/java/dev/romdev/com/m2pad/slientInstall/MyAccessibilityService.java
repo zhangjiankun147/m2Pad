@@ -67,74 +67,7 @@ public class MyAccessibilityService extends AccessibilityService {
 
     }
 
-    //----------------------------------------------------------------------------------------------------
 
-//    @Override
-//    public void onAccessibilityEvent(AccessibilityEvent event) {
-//        Log.d("InstallService", event.toString());
-//        checkInstall(event);
-//    }
-//
-//
-//    private void checkInstall(AccessibilityEvent event) {
-//        AccessibilityNodeInfo source = event.getSource();
-//        if (source != null) {
-//            boolean installPage = event.getPackageName().equals("com.android.packageinstaller");
-//            if (installPage) {
-//                installAPK(event);
-//            }
-//        }
-//    }
-//
-//    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-//    private void installAPK(AccessibilityEvent event) {
-//        AccessibilityNodeInfo source = getRootInActiveWindow();
-//        List<AccessibilityNodeInfo> nextInfos = source.findAccessibilityNodeInfosByText("下一步");
-//        nextClick(nextInfos);
-//        List<AccessibilityNodeInfo> installInfos = source.findAccessibilityNodeInfosByText("安装");
-//        nextClick(installInfos);
-//        List<AccessibilityNodeInfo> openInfos = source.findAccessibilityNodeInfosByText("打开");
-//        nextClick(openInfos);
-////        List<AccessibilityNodeInfo> downLoad = source.findAccessibilityNodeInfosByText("立即更新");
-////        nextClick(downLoad);
-//
-//        runInBack(event);
-//
-//    }
-//
-//    private void runInBack(AccessibilityEvent event) {
-//        event.getSource().performAction(AccessibilityService.GLOBAL_ACTION_BACK);
-//    }
-//
-//    private void nextClick(List<AccessibilityNodeInfo> infos) {
-//        if (infos != null)
-//            for (AccessibilityNodeInfo info : infos) {
-//                if (info.isEnabled() && info.isClickable())
-//                    info.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-//            }
-//    }
-//
-//    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
-//    private boolean checkTilte(AccessibilityNodeInfo source) {
-//        List<AccessibilityNodeInfo> infos = getRootInActiveWindow().findAccessibilityNodeInfosByViewId("@id/app_name");
-//        for (AccessibilityNodeInfo nodeInfo : infos) {
-//            if (nodeInfo.getClassName().equals("android.widget.TextView")) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-//
-//    @Override
-//    public void onInterrupt() {
-//
-//    }
-//
-//    @Override
-//    protected void onServiceConnected() {
-//        Log.d("InstallService", "auto install apk");
-//    }
-    //------------------------------------------------------------------------------------
 
 
 
